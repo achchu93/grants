@@ -35,6 +35,7 @@ class Grant {
 	 */
 	public function init() {
 		add_action( 'init', [ $this, 'register_post_type' ] );
+		add_action( 'init', [ $this, 'register_post_meta' ] );
 	}
 
 	/**
@@ -59,5 +60,45 @@ class Grant {
 				'show_in_rest'       => true
 			]
 		);
+	}
+
+	/**
+	 * Registers post meta fields.
+	 */
+	public function register_post_meta() {
+		$meta_fields = [
+			'grant_recipient' => [
+				'type'  => 'string',
+			],
+			'grant_project_title' => [
+				'type'  => 'string',
+			],
+			'grant_program' => [
+				'type' => 'string',
+			],
+			'grant_location' => [
+				'type' => 'string',
+			],
+			'grant_date' => [
+				'type' => 'string',
+			],
+			'grant_amount' => [
+				'type' => 'string',
+			],
+		];
+
+		foreach ( $meta_fields as $key => $args ) {
+			register_post_meta(
+				$this->post_type,
+				$key,
+				array_merge(
+					$args,
+					[
+						'show_in_rest' => true,
+						'single'       => true,
+					]
+				)
+			);
+		}
 	}
 }
