@@ -38,6 +38,8 @@ class Grant {
 		add_action( 'init', [ $this, 'register_post_meta' ] );
 		add_action( 'add_meta_boxes', [ $this, 'add_metabox_fieds' ] );
 		add_action( 'save_post', [ $this, 'save_metabox_fields' ] );
+		add_filter( 'manage_grant_posts_columns', [ $this, 'add_custom_columns' ] );
+		add_action( 'manage_grant_posts_custom_column', [ $this, 'render_custom_columns' ], 10, 2 );
 	}
 
 	/**
@@ -160,6 +162,52 @@ class Grant {
 					$_POST[ $field ]
 				);
 			}
+		}
+	}
+
+	/**
+	 * Setup custom columns.
+	 */
+	public function add_custom_columns( $columns ) {
+
+		unset( $columns['date'] );
+
+		$columns['recipient']     = 'Recipient';
+		$columns['project_title'] = 'Project Title';
+		$columns['program']       = 'Program';
+		$columns['location']      = 'Location';
+		$columns['amount']        = 'Amount';
+		$columns['date']          = 'Date';
+
+		return $columns;
+	}
+
+	/**
+	 * Render custom columns.
+	 *
+	 * @param string $column  Column name.
+	 * @param int    $post_id Post ID.
+	 */
+	public function render_custom_columns( $column, $post_id ) {
+		switch ( $column ) {
+			case 'recipient':
+				echo esc_html( get_post_meta( $post_id, 'grant_recipient', true ) );
+				break;
+			case 'project_title':
+				echo esc_html( get_post_meta( $post_id, 'grant_project_title', true ) );
+				break;
+			case 'program':
+				echo esc_html( get_post_meta( $post_id, 'grant_program', true ) );
+				break;
+			case 'location':
+				echo esc_html( get_post_meta( $post_id, 'grant_location', true ) );
+				break;
+			case 'amount':
+				echo esc_html( get_post_meta( $post_id, 'grant_amount', true ) );
+				break;
+			case 'date':
+				echo esc_html( get_post_meta( $post_id, 'grant_date', true ) );
+				break;
 		}
 	}
 }
