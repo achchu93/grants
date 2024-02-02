@@ -36,6 +36,8 @@ class Grant {
 	public function init() {
 		add_action( 'init', [ $this, 'register_post_type' ] );
 		add_action( 'init', [ $this, 'register_post_meta' ] );
+		add_action( 'add_meta_boxes', [ $this, 'add_metabox_fieds' ] );
+		add_action( 'save_post', [ $this, 'save_metabox_fields' ] );
 	}
 
 	/**
@@ -99,6 +101,65 @@ class Grant {
 					]
 				)
 			);
+		}
+	}
+
+	/**
+	 * Setup metabox fields.
+	 */
+	public function add_metabox_fieds() {
+		add_meta_box(
+			'grant_information',
+			'Grant Information',
+			[ $this, 'metabox_view' ],
+			'grant'
+		);
+	}
+
+	/**
+	 * Setup metabox view.
+	 *
+	 * @param WP_Post $post Post object.
+	 */
+	public function metabox_view( $post ) {
+		include GRANTS_PLUGIN_DIR . '/views/admin/metabox.php';
+	}
+
+	/**
+	 * Save metabox fields.
+	 *
+	 * @param int $post_id Post ID.
+	 */
+	public function save_metabox_fields( $post_id ) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_REQUEST['grant_nonce'], 'grant-save-information' ) ) {
+			return;
+		}
+
+		$meta_fields = [
+			'grant_recipient',
+			'grant_project_title',
+			'grant_program',
+			'grant_location',
+			'grant_date',
+			'grant_amount',
+		];
+
+		foreach ( $meta_fields as $field ) {
+			if ( array_key_exists( $field, $_POST ) ) {
+				update_post_meta(
+					$post_id,
+					$field,
+					$_POST[ $field ]
+				);
+			}
 		}
 	}
 }

@@ -21,7 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Define plugin constants.
 define( 'GRANTS_PLUGIN_FILE', __FILE__ );
-define( 'GRANTS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'GRANTS_PLUGIN_DIR', plugin_dir_path( GRANTS_PLUGIN_FILE ) );
+define( 'GRANTS_PLUGIN_URL', plugin_dir_url( GRANTS_PLUGIN_FILE ) );
 
 // Include the main plugin class.
 require_once __DIR__ . '/includes/class-grants.php';
