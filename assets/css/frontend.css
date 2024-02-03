@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Arvo&family=Lato:wght@300;700;900&display=swap');
+
+.grant-filter-wrapper {
+    width: 100%;
+    margin: 0 !important;
+	padding: 0 !important;
+}
+
+.grant-filter-form form {
+    display: flex;
+	gap: 16px;
+}
+
+.grant-filter-form form .grant-filter-form-field:last-child {
+	margin-left: auto;
+}
+
+.grant-filter-form form input,
+.grant-filter-form form button {
+	font-family: 'Lato', sans-serif;
+}
+
+.grant-filter-form form #grant_search {
+    min-width: 200px;
+    max-width: 460px;
+    min-height: 50px;
+    border-radius: 0;
+    border: 3px solid #00293A;
+    box-sizing: border-box;
+    font-size: 16px;
+    padding: 5px 25px 5px 45px;
+	background-image: url('./../svg/search.svg');
+	background-repeat: no-repeat;
+	background-position: 17px center;
+    background-size: 16px;
+}
+
+.grant-filter-form form #grant_search::placeholder {
+    color: #00293A;
+}
+
+.grant-custom-dropdown {
+	position: relative;
+}
+
+.grant-custom-dropdown .grant-custom-dropdown--trigger {
+    min-height: 50px;
+    box-sizing: border-box;
+    border: none;
+    background: #EDF0F5;
+    padding: 16px 52px 16px 20px;
+    font-size: 18px;
+	font-weight: bold;
+    line-height: 21px;
+	cursor: pointer;
+}
+
+.grant-custom-dropdown .grant-custom-dropdown--trigger::after {
+	content: '';
+    position: absolute;
+    width: 20px;
+    height: 12px;
+    transform: translateX(12px) translateY(5px);
+	background: url('./../svg/Union.svg');
+}
+
+.grant-custom-dropdown .grant-custom-dropdown--list {
+	visibility: hidden;
+    opacity: 0;
+    background: #fafaff;
+    padding: 20px;
+    position: absolute;
+    min-width: 200px;
+    transform: translateY(35px);
+	transition: opacity 0.3s ease-out, visibility 0.3s ease-out 0.5s, transform 0.2s ease-out;
+	font-family: 'Lato', sans-serif;
+}
+
+.grant-custom-dropdown.is-open .grant-custom-dropdown--list {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease-out, transform 0.2s ease-out;
+}
+
+.grant-filter-form form .grant-filter-form-field:last-child .grant-custom-dropdown--list {
+    right: 0;
+}
+
+.grant-custom-dropdown--list-item {
+    font-size: 18px;
+    padding: 15px 0;
+    line-height: 21px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.grant-custom-dropdown--list .grant-custom-dropdown--list-item:first-child {
+    padding-top: 0;
+}
+
+.grant-custom-dropdown--list .grant-custom-dropdown--list-item:last-child {
+    padding-bottom: 0;
+}
