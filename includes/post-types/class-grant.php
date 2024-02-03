@@ -40,6 +40,7 @@ class Grant {
 		add_action( 'save_post', [ $this, 'save_metabox_fields' ] );
 		add_filter( 'manage_grant_posts_columns', [ $this, 'add_custom_columns' ] );
 		add_action( 'manage_grant_posts_custom_column', [ $this, 'render_custom_columns' ], 10, 2 );
+		add_filter( 'rest_grant_query', [ $this, 'modify_query' ], 99, 2 );
 	}
 
 	/**
@@ -209,5 +210,31 @@ class Grant {
 				echo esc_html( get_post_meta( $post_id, 'grant_date', true ) );
 				break;
 		}
+	}
+
+	/**
+	 * Modify the query for the grant post type.
+	 */
+	public function modify_query( $args, $request ) {
+
+		if ( isset( $request['filter'] ) && isset( $request['filter']['meta'] ) ) {
+			$metas      = is_array( $request['filter']['meta'] ) ? $request['filter']['meta'] : [];
+			$meta_query = [];
+
+			foreach ( $metas as $meta ) {
+				$meta_query[] = [
+					'key'     => $meta['key'],
+					'value'   => $meta['value'],
+					'compare' => isset( $meta['compare'] ) ? $meta['compare'] : '=',
+				];
+			}
+
+			if ( count( $meta_query ) ) {
+				$meta_query['relation'] = 'AND';
+				$args['meta_query']     = $meta_query;
+			}
+		}
+
+		return $args;
 	}
 }
