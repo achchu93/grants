@@ -55,7 +55,7 @@ class Grant {
 				'show_ui'            => true,
 				'show_in_menu'       => true,
 				'menu_icon'          => 'dashicons-money-alt',
-				'supports'           => [ 'title', 'editor' ],
+				'supports'           => [ 'title', 'editor', 'custom-fields' ],
 				'query_var'          => true,
 				'rewrite'            => [ 'slug' => 'grant' ],
 				'capability_type'    => 'post',
