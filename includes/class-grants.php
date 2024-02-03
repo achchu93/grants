@@ -12,6 +12,7 @@ final class Grants {
 	public function init() {
 		$this->includes();
 		$this->init_instances();
+		$this->init_shortcodes();
 	}
 
 	/**
@@ -19,6 +20,7 @@ final class Grants {
 	 */
 	public function includes() {
 		require_once __DIR__ . '/post-types/class-grant.php';
+		require_once __DIR__ . '/shortcodes/class-grant-listing.php';
 	}
 
 	/**
@@ -27,5 +29,10 @@ final class Grants {
 	public function init_instances() {
 		$grant = new PostTypes\Grant();
 		$grant->init();
+	}
+
+	public function init_shortcodes() {
+		$grant_listing = new Shortcodes\Grant_Listing();
+		$grant_listing->init();
 	}
 }
