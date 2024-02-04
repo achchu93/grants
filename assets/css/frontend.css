@@ -80,7 +80,8 @@ body {
     min-width: 200px;
     transform: translateY(35px);
 	transition: opacity 0.3s ease-out, visibility 0.3s ease-out 0.5s, transform 0.2s ease-out;
-	font-family: 'Lato', sans-serif;
+	max-height: 400px;
+    overflow-y: scroll;
 }
 
 .grant-custom-dropdown.is-open .grant-custom-dropdown--list {
@@ -147,6 +148,10 @@ body {
     bottom: 0;
     right: 0;
     margin: auto;
+}
+
+.grant-custom-dropdown--list-item.is-active:has(> .grant-custom-dropdown--range)::after {
+    margin-top: 20px;
 }
 
 .grant-list-wrapper .grant-list-item:last-child {

@@ -20,6 +20,8 @@ final class Grants {
 	 */
 	public function includes() {
 		require_once __DIR__ . '/post-types/class-grant.php';
+		require_once __DIR__ . '/store/class-grant.php';
+		require_once __DIR__ . '/utils/class-price.php';
 		require_once __DIR__ . '/shortcodes/class-grant-listing.php';
 		require_once __DIR__ . '/shortcodes/class-grant-filter.php';
 	}
