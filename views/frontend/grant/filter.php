@@ -14,7 +14,7 @@ use Grants\Utils\Price;
 		</div>
 		<div class="grant-filter-form-field">
 			<div class="grant-custom-dropdown">
-				<button class="grant-custom-dropdown--trigger" data-filter="year">Year</button>
+				<button class="grant-custom-dropdown--trigger" data-filter="date">Year</button>
 				<div class="grant-custom-dropdown--list">
 					<?php
 					$list = Store::get_years();

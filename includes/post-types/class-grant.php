@@ -226,6 +226,7 @@ class Grant {
 					'key'     => $meta['key'],
 					'value'   => $meta['value'],
 					'compare' => isset( $meta['compare'] ) ? $meta['compare'] : '=',
+					'type'    => isset( $meta['type'] ) ? $meta['type'] : 'CHAR'
 				];
 			}
 

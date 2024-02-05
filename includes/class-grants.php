@@ -53,7 +53,7 @@ final class Grants {
 	 */
 	public function enqueue_frontend_assets() {
 		wp_register_style( 'grant-frontend', GRANTS_PLUGIN_URL . 'assets/css/frontend.css' );
-		wp_register_script( 'grant-frontend', GRANTS_PLUGIN_URL . 'assets/js/frontend.js', [ 'jquery', 'wp-api' ], false, true );
+		wp_register_script( 'grant-frontend', GRANTS_PLUGIN_URL . 'assets/js/frontend.js', [ 'jquery', 'wp-api', 'wp-util' ], false, true );
 
 		wp_enqueue_style( 'grant-frontend' );
 		wp_enqueue_script( 'grant-frontend' );

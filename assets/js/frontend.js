@@ -1,6 +1,9 @@
 ( function( $ ) {
 
+	var $container = $( '.grant-list-content' );
 	var filters = {};
+	var oldFilters = {};
+	var Grant = null;
 
 	/**
 	 * Add filter element as a chip.
@@ -38,6 +41,102 @@
 		$( '.grant-custom-dropdown--list-item.is-active' ).removeClass( 'is-active' );
 	}
 
+
+	/**
+	 *
+	 * @param {number} limit
+	 * @returns {Promise}
+	 */
+	function fetchGrants( limit ) {
+
+		if ( Grant && Grant.hasMore() && _.isEqual( oldFilters, filters ) ) {
+			return Grant.more();
+		}
+
+		if ( ! Grant ) {
+			Grant = new wp.api.collections.Grant();
+		}
+
+		var appliedFilters = {};
+
+		appliedFilters['meta'] = Object.entries( filters ).map( function( [ filter, value ] ) {
+			var compare = '=';
+			value = value.toString();
+			var type = 'CHAR';
+
+			if ( value.indexOf( '<' ) !== -1 ) {
+				value = value.replace( '<', '' ).trim();
+				compare = '<=';
+				type = 'NUMERIC';
+			} else if ( value.indexOf( '-' ) !== -1 ) {
+				value = value.replace( ' ', '' ).split( '-' );
+				compare = 'BETWEEN';
+				type = 'NUMERIC';
+			} else if ( filter === 'date' ) {
+				value = '^' + value + '-[0-9]{2}-[0-9]{2}$'
+				compare = 'REGEXP';
+				type = 'DATE';
+			}
+
+			filter = filter !== 'sortby' ? 'grant_' + filter : filter;
+
+			return { key: filter, value: value, compare: compare, type: type };
+		} );
+
+		oldFilters = filters;
+
+		return Grant.fetch({ data: { per_page: limit, filter: appliedFilters } });
+	}
+
+	function toggleListContainer( list ) {
+		var container = $( '.grant-list-content' );
+		if ( list === '' ) {
+			container.html( '' );
+		} else {
+			container.append( list );
+		}
+	}
+
+
+	function appendItemsToList( data ) {
+		var template = wp.template( 'grant-list-item' );
+		var children = data.map( function( model ) {
+			return template({
+				title: model.title.rendered,
+				location: model.meta.grant_location,
+				recipient: model.meta.grant_recipient,
+				url: model.link
+			});
+		} );
+
+		$container.append( children );
+	}
+
+	function showLoading() {
+		console.log( 'loading' );
+	}
+
+	function hideLoading() {
+		console.log( 'done' );
+	}
+
+	function applyFilters( append, cb ) {
+		if ( ! append ) {
+			$container.html( '' );
+		}
+
+		showLoading();
+
+		fetchGrants( 10 )
+			.then( appendItemsToList )
+			.done( function() {
+				if ( undefined !== cb ) {
+					cb();
+				}
+				hideLoading();
+			} );
+	}
+
 	/**
 	 * On document ready.
 	 */
@@ -67,6 +166,8 @@
 
 				removeFilterFromList( filter );
 				addFilterToList( filter, label );
+
+				applyFilters();
 			}
 		} );
 
@@ -79,14 +180,62 @@
 
 			removeFilterFromList( key );
 			removeSelectedFilterValue( key );
+
+			toggleListContainer( '' );
+
+			applyFilters()
 		} );
 
 
 		// Handle clear filter button.
 		$( '#clear-filter' ).on( 'click', function() {
+
+			if ( Object.keys( filters ).length === 0 ) {
+				return;
+			}
+
 			filters = {};
 			clearFilters();
+			applyFilters();
 		} );
+
+		// Handle view full list button.
+		$( '#grant-list-full-view' ).on( 'click', function() {
+			$( this ).attr( 'disabled', true );
+
+			var container = $( '.grant-list-content' );
+			var self = $( this );
+
+			toggleListContainer( '' );
+			( function processList( hasMore, callback ) {
+				if ( hasMore ) {
+					fetchGrants( 100 )
+						.then( function( response ) {
+							appendItemsToList( response );
+							processList( Grant.hasMore(), callback );
+						} );
+				} else {
+					callback();
+				}
+			} )( true, function() {
+				self.attr( 'disabled', false );
+			} );
+		} );
+
+		$( '#grant-list-show-more' ).on( 'click', function() {
+			if ( ! Grant || ! Grant.hasMore() ) {
+				return;
+			}
+
+			var self = $( this );
+			self.attr( 'disabled', true );
+
+			applyFilters( true, function() {
+				self.attr( 'disabled', false );
+			} );
+
+		} );
+
 
 	} );
 

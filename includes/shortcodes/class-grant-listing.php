@@ -9,6 +9,7 @@ class Grant_Listing {
 	 */
 	public function init() {
 		add_shortcode( 'grant_listing', [ $this, 'render' ] );
+		add_action( 'wp_footer', [ $this, 'underscore_template' ] );
 	}
 
 	/**
@@ -35,5 +36,12 @@ class Grant_Listing {
 		include GRANTS_PLUGIN_DIR . '/views/frontend/grant/list.php';
 		wp_reset_postdata();
 		return ob_get_clean();
+	}
+
+	/**
+	 * Underscore template for list item.
+	 */
+	public function underscore_template() {
+		include_once GRANTS_PLUGIN_DIR . '/views/frontend/grant/temp-list-item.php';
 	}
 }
