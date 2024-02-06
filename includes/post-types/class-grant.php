@@ -217,22 +217,41 @@ class Grant {
 	 */
 	public function modify_query( $args, $request ) {
 
-		if ( isset( $request['filter'] ) && isset( $request['filter']['meta'] ) ) {
-			$metas      = is_array( $request['filter']['meta'] ) ? $request['filter']['meta'] : [];
-			$meta_query = [];
+		if ( isset( $request['filter'] ) ) {
 
-			foreach ( $metas as $meta ) {
-				$meta_query[] = [
-					'key'     => $meta['key'],
-					'value'   => $meta['value'],
-					'compare' => isset( $meta['compare'] ) ? $meta['compare'] : '=',
-					'type'    => isset( $meta['type'] ) ? $meta['type'] : 'CHAR'
-				];
+			if ( isset( $request['filter']['meta'] ) ) {
+				$metas      = is_array( $request['filter']['meta'] ) ? $request['filter']['meta'] : [];
+				$meta_query = [];
+
+				foreach ( $metas as $meta ) {
+					$meta_query[] = [
+						'key'     => $meta['key'],
+						'value'   => $meta['value'],
+						'compare' => isset( $meta['compare'] ) ? $meta['compare'] : '=',
+						'type'    => isset( $meta['type'] ) ? $meta['type'] : 'CHAR'
+					];
+				}
+
+				if ( count( $meta_query ) ) {
+					$meta_query['relation'] = 'AND';
+					$args['meta_query']     = $meta_query;
+				}
 			}
 
-			if ( count( $meta_query ) ) {
-				$meta_query['relation'] = 'AND';
-				$args['meta_query']     = $meta_query;
+			if ( isset( $request[ 'filter' ][ 'meta_key' ] ) ) {
+				$args['meta_key'] = $request[ 'filter' ][ 'meta_key' ];
+			}
+
+			if ( isset( $request[ 'filter' ][ 'meta_type' ] ) ) {
+				$args['meta_type'] = $request[ 'filter' ][ 'meta_type' ];
+			}
+
+			if ( isset( $request[ 'filter' ][ 'order' ] ) ) {
+				$args['order'] = $request[ 'filter' ][ 'order' ];
+			}
+
+			if ( isset( $request[ 'filter' ][ 'orderby' ] ) ) {
+				$args['orderby'] = $request[ 'filter' ][ 'orderby' ];
 			}
 		}
 

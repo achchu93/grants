@@ -29,6 +29,10 @@ class Grant_Listing {
 			[
 				'post_type'      => 'grant',
 				'posts_per_page' => $atts['limit'],
+				'orderby'        => 'meta_value',
+				'order'          => 'DESC',
+				'meta_key'       => 'grant_date',
+				'meta_type'      => 'DATE',
 			]
 		);
 

@@ -86,7 +86,22 @@
 
 		oldFilters = Object.assign( {}, filters );
 
-		return Grant.fetch( { data: { per_page: limit, filter: appliedFilters } } );
+		return Grant.fetch( { data: { per_page: limit, filter: Object.assign( appliedFilters, getSortFilter() ) } } );
+	}
+
+	function getSortFilter() {
+		var sortSelected = $( '.grant-custom-dropdown--trigger[data-filter="sortby"]' ).next().find( '.is-active' ).data( 'value' );
+		var sortFilter = {
+			'orderby': sortSelected === 'title' ? 'title' : 'meta_value',
+			'order': sortSelected === 'title' ? 'ASC' : 'DESC'
+		};
+
+		if ( sortSelected !== 'title' ) {
+			sortFilter['meta_key'] = 'grant_date';
+			sortFilter['meta_type'] = 'DATE';
+		}
+
+		return sortFilter;
 	}
 
 	function toggleListContainer( list ) {
@@ -157,10 +172,9 @@
 					property = model.get( 'title' ).rendered;
 					break;
 				case 'date':
+				default:
 					property = -model.getMeta( 'grant_date' );
 					break;
-				default:
-					property = model.cid;
 			}
 
 			return property;
