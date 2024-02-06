@@ -4,6 +4,7 @@
 	var filters = {};
 	var oldFilters = {};
 	var Grant = null;
+	var currentRequest = null;
 
 	/**
 	 * Add filter element as a chip.
@@ -40,6 +41,7 @@
 		filters = {};
 		$( '.grant-filter-list--item' ).remove();
 		$( '.grant-custom-dropdown--list-item.is-active' ).removeClass( 'is-active' );
+		$( '#grant_search' ).val( '' );
 	}
 
 
@@ -49,6 +51,10 @@
 	 * @returns {Promise}
 	 */
 	function fetchGrants( limit ) {
+
+		if ( currentRequest !== null ) {
+			currentRequest.abort();
+		}
 
 		if ( Grant && Grant.hasMore() && _.isEqual( oldFilters, filters ) ) {
 			return Grant.more();
@@ -84,9 +90,17 @@
 			return { key: filter, value: value, compare: compare, type: type };
 		} );
 
-		oldFilters = Object.assign( {}, filters );
+		var data = { per_page: limit, filter: Object.assign( appliedFilters, getSortFilter() ) };
+		var searchTerm = $( '#grant_search' ).val().trim();
 
-		return Grant.fetch( { data: { per_page: limit, filter: Object.assign( appliedFilters, getSortFilter() ) } } );
+		if ( searchTerm.length ) {
+			data['search'] = searchTerm;
+		}
+
+		oldFilters = Object.assign( {}, filters );
+		currentRequest = Grant.fetch( { data: data } );
+
+		return currentRequest;
 	}
 
 	function getSortFilter() {
@@ -160,7 +174,6 @@
 			if ( hasMore ) {
 				fetchGrants( limit )
 					.then( function( response ) {
-						console.log(pages,Grant.state.currentPage )
 						appendItemsToList( response );
 						processList( pages !== undefined ? ( pages > Grant.state.currentPage ) : Grant.hasMore() , callback );
 					} );
@@ -170,6 +183,18 @@
 		} )( true, function() {
 			if ( undefined !== cb ) cb();
 		} );
+	}
+
+	function search( e )  {
+		var term = $( this ).val().trim();
+
+		if ( ! term.length ) {
+			return;
+		}
+
+		Grant = null;
+
+		applyFilters();
 	}
 
 	function init() {
@@ -277,6 +302,9 @@
 			} );
 
 		} );
+
+
+		$( '#grant_search' ).on( 'keyup', _.debounce( search , 500 ) );
 
 
 	} );
