@@ -104,24 +104,7 @@
 		return sortFilter;
 	}
 
-	function toggleListContainer( list ) {
-		var container = $( '.grant-list-content' );
-		if ( list === '' ) {
-			container.html( '' );
-		} else {
-			container.append( list );
-		}
-	}
-
-
 	function appendItemsToList( data ) {
-
-		// Sort the data if a sort filter is selected.
-		var sortSelected = $( '.grant-custom-dropdown--trigger[data-filter="sortby"]' ).next().find( '.is-active' ).data( 'value' );
-		if ( sortSelected ) {
-			data = sortData( sortSelected );
-		}
-
 		var template = wp.template( 'grant-list-item' );
 		var children = data.map( function( model ) {
 			if ( ! ( model instanceof wp.api.models.Grant ) ) {
@@ -163,24 +146,30 @@
 			} );
 	}
 
-	function sortData( sortBy ) {
-		var sorted = Grant.sortBy( function( model ) {
-			var property = 'default';
+	function loadList( limit, cb, pages ) {
 
-			switch ( sortBy ) {
-				case 'title':
-					property = model.get( 'title' ).rendered;
-					break;
-				case 'date':
-				default:
-					property = -model.getMeta( 'grant_date' );
-					break;
+		Grant = new wp.api.collections.Grant();
+
+		if ( ! limit ) {
+			limit = 10;
+		}
+
+		$container.html( '' );
+
+		( function processList( hasMore, callback ) {
+			if ( hasMore ) {
+				fetchGrants( limit )
+					.then( function( response ) {
+						console.log(pages,Grant.state.currentPage )
+						appendItemsToList( response );
+						processList( pages !== undefined ? ( pages > Grant.state.currentPage ) : Grant.hasMore() , callback );
+					} );
+			} else {
+				callback();
 			}
-
-			return property;
+		} )( true, function() {
+			if ( undefined !== cb ) cb();
 		} );
-
-		return sorted;
 	}
 
 	function init() {
@@ -217,7 +206,11 @@
 
 				if ( filter === 'sortby' ) {
 					$container.html( '' );
-					appendItemsToList();
+					loadList(
+						10,
+						undefined,
+						Grant.state.currentPage
+					);
 					return;
 				}
 
@@ -263,20 +256,12 @@
 
 			clearFilters();
 
-			( function processList( hasMore, callback ) {
-				if ( hasMore ) {
-					fetchGrants( 100 )
-						.then( function( response ) {
-							$container.html( '' );
-							appendItemsToList( response );
-							processList( Grant.hasMore(), callback );
-						} );
-				} else {
-					callback();
+			loadList(
+				2,
+				function() {
+					self.attr( 'disabled', false );
 				}
-			} )( true, function() {
-				self.attr( 'disabled', false );
-			} );
+			);
 		} );
 
 		$( '#grant-list-show-more' ).on( 'click', function() {
