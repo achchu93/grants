@@ -26,11 +26,11 @@ use Grants\Utils\Price;
 						<div class="grant-custom-dropdown--range">
 							<fieldset>
 								<label for="from">From</label>
-								<input type="text" name="from" id="from">
+								<input type="number" name="from" id="from">
 							</fieldset>
 							<fieldset>
 								<label for="to">To</label>
-								<input type="text" name="to" id="to">
+								<input type="number" name="to" id="to">
 							</fieldset>
 						</div>
 					</div>

@@ -239,6 +239,11 @@
 					return;
 				}
 
+				if ( filter === 'date' && value === 'custom' ) {
+					$( '#from' ).trigger( 'change' );
+					return;
+				}
+
 				filters[filter] = value;
 
 				removeFilterFromList( filter );
@@ -305,6 +310,27 @@
 
 
 		$( '#grant_search' ).on( 'keyup', _.debounce( search , 500 ) );
+
+		$( '#from, #to' ).on( 'change', function() {
+			var from = $( '#from' ).val();
+			var to = $( '#to' ).val();
+
+			var reg = /^\d{4}$/;
+
+			if ( ! from.toString().match( reg ) || ! to.toString().match( reg ) || from > to ) {
+				console.log( 'invalid date range', from.toString().match( reg ), to.toString().match( reg ) );
+				return;
+			}
+
+			var filterLabel = 'date';
+			var filterValue = from + ' - ' + to;
+
+			filters[ filterLabel ] = filterValue;
+
+			removeFilterFromList( filterLabel );
+			addFilterToList( filterLabel, filterValue );
+			applyFilters();
+		} );
 
 
 	} );
