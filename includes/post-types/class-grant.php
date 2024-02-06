@@ -178,7 +178,7 @@ class Grant {
 		$columns['program']       = 'Program';
 		$columns['location']      = 'Location';
 		$columns['amount']        = 'Amount';
-		$columns['date']          = 'Date';
+		$columns['grant_date']    = 'Date';
 
 		return $columns;
 	}
@@ -206,8 +206,8 @@ class Grant {
 			case 'amount':
 				echo esc_html( get_post_meta( $post_id, 'grant_amount', true ) );
 				break;
-			case 'date':
-				echo esc_html( get_post_meta( $post_id, 'grant_date', true ) );
+			case 'grant_date':
+				echo date( 'Y-m-d', strtotime( get_post_meta( $post_id, 'grant_date', true ) ) );
 				break;
 		}
 	}
