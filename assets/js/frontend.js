@@ -157,8 +157,8 @@
 	function appendItemsToList( data ) {
 		var template = wp.template( 'grant-list-item' );
 		var children = data.map( function( model ) {
-			if ( ! ( model instanceof wp.api.models.Grant ) ) {
-				model = new wp.api.models.Grant( model );
+			if ( ! ( model instanceof wp.api.models.PastGrants ) ) {
+				model = new wp.api.models.PastGrants( model );
 			}
 			return template({
 				title: model.get('title').rendered,
