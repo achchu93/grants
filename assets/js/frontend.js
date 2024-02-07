@@ -88,7 +88,7 @@
 		}
 
 		if ( ! Grant ) {
-			Grant = new wp.api.collections.Grant();
+			Grant = new wp.api.collections.PastGrants();
 		}
 
 		var appliedFilters = {};
@@ -111,8 +111,6 @@
 				compare = 'REGEXP';
 				type = 'DATE';
 			}
-
-			filter = filter !== 'sortby' ? 'grant_' + filter : filter;
 
 			return { key: filter, value: value, compare: compare, type: type };
 		} );
@@ -143,7 +141,7 @@
 		};
 
 		if ( sortSelected !== 'title' ) {
-			sortFilter['meta_key'] = 'grant_date';
+			sortFilter['meta_key'] = 'date';
 			sortFilter['meta_type'] = 'DATE';
 		}
 
@@ -163,8 +161,8 @@
 			}
 			return template({
 				title: model.get('title').rendered,
-				location: model.getMeta('grant_location'),
-				recipient: model.getMeta('grant_recipient'),
+				location: model.getMeta('location'),
+				recipient: model.getMeta('recipient'),
 				url: model.get('link')
 			});
 		} );
@@ -218,7 +216,7 @@
 	 */
 	function loadList( limit, cb, pages ) {
 
-		Grant = new wp.api.collections.Grant();
+		Grant = new wp.api.collections.PastGrants();
 
 		if ( ! limit ) {
 			limit = 10;

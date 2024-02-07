@@ -9,8 +9,8 @@
 			<div class="grant-list-item">
 				<div class="left-part">
 					<h2><?php the_title(); ?></h2>
-					<p><strong>Location:</strong> <?php echo esc_html( get_post_meta( get_the_ID(), 'grant_location', true ) ); ?></p>
-					<p><strong>Recipient:</strong> <?php echo esc_html( get_post_meta( get_the_ID(), 'grant_recipient', true ) ); ?></p>
+					<p><strong>Location:</strong> <?php echo esc_html( get_post_meta( get_the_ID(), 'location', true ) ); ?></p>
+					<p><strong>Recipient:</strong> <?php echo esc_html( get_post_meta( get_the_ID(), 'recipient', true ) ); ?></p>
 				</div>
 				<div class="right-part">
 					<button><a href="<?php the_permalink(); ?>">Learn More</a></button>

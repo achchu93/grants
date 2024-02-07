@@ -9,161 +9,15 @@ class Grant {
 	/**
 	 * Post type name.
 	 */
-	private $post_type = 'grant';
-
-	/**
-	 * Post type labels.
-	 */
-	private $labels = [
-		'name'               => 'Grants',
-		'singular_name'      => 'Grant',
-		'add_new'            => 'Add New',
-		'add_new_item'       => 'Add New Grant',
-		'edit_item'          => 'Edit Grant',
-		'new_item'           => 'New Grant',
-		'all_items'          => 'All Grants',
-		'view_item'          => 'View Grant',
-		'search_items'       => 'Search Grants',
-		'not_found'          => 'No Grants found',
-		'not_found_in_trash' => 'No Grants found in Trash',
-		'parent_item_colon'  => '',
-		'menu_name'          => 'Grants',
-	];
+	private $post_type = 'past-grants';
 
 	/**
 	 * Initializes the post type.
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'register_post_type' ] );
-		add_action( 'init', [ $this, 'register_post_meta' ] );
-		add_action( 'add_meta_boxes', [ $this, 'add_metabox_fieds' ] );
-		add_action( 'save_post', [ $this, 'save_metabox_fields' ] );
-		add_filter( 'manage_grant_posts_columns', [ $this, 'add_custom_columns' ] );
-		add_action( 'manage_grant_posts_custom_column', [ $this, 'render_custom_columns' ], 10, 2 );
-		add_filter( 'rest_grant_query', [ $this, 'modify_query' ], 99, 2 );
-	}
-
-	/**
-	 * Registers the post type.
-	 */
-	public function register_post_type() {
-		register_post_type(
-			$this->post_type,
-			[
-				'labels'             => $this->labels,
-				'public'             => true,
-				'publicly_queryable' => true,
-				'show_ui'            => true,
-				'show_in_menu'       => true,
-				'menu_icon'          => 'dashicons-money-alt',
-				'supports'           => [ 'title', 'editor', 'custom-fields' ],
-				'query_var'          => true,
-				'rewrite'            => [ 'slug' => 'grant' ],
-				'capability_type'    => 'post',
-				'has_archive'        => true,
-				'hierarchical'       => false,
-				'show_in_rest'       => true
-			]
-		);
-	}
-
-	/**
-	 * Registers post meta fields.
-	 */
-	public function register_post_meta() {
-		$meta_fields = [
-			'grant_recipient' => [
-				'type'  => 'string',
-			],
-			'grant_project_title' => [
-				'type'  => 'string',
-			],
-			'grant_program' => [
-				'type' => 'string',
-			],
-			'grant_location' => [
-				'type' => 'string',
-			],
-			'grant_date' => [
-				'type' => 'string',
-			],
-			'grant_amount' => [
-				'type' => 'string',
-			],
-		];
-
-		foreach ( $meta_fields as $key => $args ) {
-			register_post_meta(
-				$this->post_type,
-				$key,
-				array_merge(
-					$args,
-					[
-						'show_in_rest' => true,
-						'single'       => true,
-					]
-				)
-			);
-		}
-	}
-
-	/**
-	 * Setup metabox fields.
-	 */
-	public function add_metabox_fieds() {
-		add_meta_box(
-			'grant_information',
-			'Grant Information',
-			[ $this, 'metabox_view' ],
-			'grant'
-		);
-	}
-
-	/**
-	 * Setup metabox view.
-	 *
-	 * @param WP_Post $post Post object.
-	 */
-	public function metabox_view( $post ) {
-		include GRANTS_PLUGIN_DIR . '/views/admin/metabox.php';
-	}
-
-	/**
-	 * Save metabox fields.
-	 *
-	 * @param int $post_id Post ID.
-	 */
-	public function save_metabox_fields( $post_id ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return;
-		}
-
-		if ( ! wp_verify_nonce( $_REQUEST['grant_nonce'], 'grant-save-information' ) ) {
-			return;
-		}
-
-		$meta_fields = [
-			'grant_recipient',
-			'grant_project_title',
-			'grant_program',
-			'grant_location',
-			'grant_date',
-			'grant_amount',
-		];
-
-		foreach ( $meta_fields as $field ) {
-			if ( array_key_exists( $field, $_POST ) ) {
-				update_post_meta(
-					$post_id,
-					$field,
-					$_POST[ $field ]
-				);
-			}
-		}
+		add_filter( "manage_{$this->post_type}_posts_columns", [ $this, 'add_custom_columns' ] );
+		add_action( "manage_{$this->post_type}_posts_custom_column", [ $this, 'render_custom_columns' ], 10, 2 );
+		add_filter( "rest_{$this->post_type}_query", [ $this, 'modify_query' ], 99, 2 );
 	}
 
 	/**
@@ -192,22 +46,22 @@ class Grant {
 	public function render_custom_columns( $column, $post_id ) {
 		switch ( $column ) {
 			case 'recipient':
-				echo esc_html( get_post_meta( $post_id, 'grant_recipient', true ) );
+				echo esc_html( get_post_meta( $post_id, 'recipient', true ) );
 				break;
 			case 'project_title':
-				echo esc_html( get_post_meta( $post_id, 'grant_project_title', true ) );
+				echo esc_html( get_post_meta( $post_id, 'project-title', true ) );
 				break;
 			case 'program':
-				echo esc_html( get_post_meta( $post_id, 'grant_program', true ) );
+				echo esc_html( get_post_meta( $post_id, 'grant-program', true ) );
 				break;
 			case 'location':
-				echo esc_html( get_post_meta( $post_id, 'grant_location', true ) );
+				echo esc_html( get_post_meta( $post_id, 'location', true ) );
 				break;
 			case 'amount':
-				echo esc_html( get_post_meta( $post_id, 'grant_amount', true ) );
+				echo esc_html( get_post_meta( $post_id, 'amount', true ) );
 				break;
 			case 'grant_date':
-				echo date( 'Y-m-d', strtotime( get_post_meta( $post_id, 'grant_date', true ) ) );
+				echo date( 'Y-m-d', strtotime( get_post_meta( $post_id, 'date', true ) ) );
 				break;
 		}
 	}

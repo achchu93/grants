@@ -22,10 +22,10 @@ class Price {
 			return [ 0, $max ];
 		}
 
-		$avg  = $max / 6;
+		$avg  = $max / 4;
 		$last = 0;
 
-		for ( $i = 1; $i <= 6; $i++ ) {
+		for ( $i = 1; $i <= 4; $i++ ) {
 			$value    = $avg * $i;
 			$power    = $value < 100 ? 10: 100;
 			$amount   = floor( $value / $power ) * $power;

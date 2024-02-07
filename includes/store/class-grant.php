@@ -7,7 +7,7 @@ class Grant {
 	/**
 	 * Post type.
 	 */
-	private static $post_type = 'grant';
+	private static $post_type = 'past-grants';
 
 	/**
 	 * Cache prefix.
@@ -30,7 +30,7 @@ class Grant {
 	 * @return array
 	 */
 	public static function get_years() {
-		return self::query_distinct_list( 'grant_date', 'year' );
+		return self::query_distinct_list( 'date', 'year' );
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Grant {
 	 * @return array
 	 */
 	public static function get_programs() {
-		return self::query_distinct_list( 'grant_program' );
+		return self::query_distinct_list( 'grant-program' );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class Grant {
 	 * @return array
 	 */
 	public static function get_amounts() {
-		return self::query_distinct_list( 'grant_amount' );
+		return self::query_distinct_list( 'amount' );
 	}
 
 	/**

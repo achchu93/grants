@@ -27,11 +27,11 @@ class Grant_Listing {
 
 		$query = new \WP_Query(
 			[
-				'post_type'      => 'grant',
+				'post_type'      => 'past-grants',
 				'posts_per_page' => $atts['limit'],
 				'orderby'        => 'meta_value',
 				'order'          => 'DESC',
-				'meta_key'       => 'grant_date',
+				'meta_key'       => 'date',
 				'meta_type'      => 'DATE',
 			]
 		);
