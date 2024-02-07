@@ -103,6 +103,11 @@
 		return currentRequest;
 	}
 
+	/**
+	 * Get sort filter params.
+	 *
+	 * @returns {Object} Sort filter.
+	 */
 	function getSortFilter() {
 		var sortSelected = $( '.grant-custom-dropdown--trigger[data-filter="sortby"]' ).next().find( '.is-active' ).data( 'value' );
 		var sortFilter = {
@@ -118,6 +123,11 @@
 		return sortFilter;
 	}
 
+	/**
+	 * Create a list of grant item and appends to the container.
+	 *
+	 * @param {Array} data
+	 */
 	function appendItemsToList( data ) {
 		var template = wp.template( 'grant-list-item' );
 		var children = data.map( function( model ) {
@@ -135,14 +145,26 @@
 		$container.append( children );
 	}
 
+	/**
+	 * Show loading state.
+	 */
 	function showLoading() {
 		console.log( 'loading' );
 	}
 
+	/**
+	 * Hide loading state.
+	 */
 	function hideLoading() {
 		console.log( 'done' );
 	}
 
+	/**
+	 * Apply the filters and update the list.
+	 *
+	 * @param {Boolean} append Append to the list or clear container.
+	 * @param {CallableFunction} cb Callback to be called after the list is updated.
+	 */
 	function applyFilters( append, cb ) {
 		if ( ! append ) {
 			$container.html( '' );
@@ -160,6 +182,13 @@
 			} );
 	}
 
+	/**
+	 * Load the list of grants until a certain requirement met.
+	 *
+	 * @param {Number} limit Request item limit.
+	 * @param {CallableFunction} cb Callback to be called after each request.
+	 * @param {Number} pages Page limit.
+	 */
 	function loadList( limit, cb, pages ) {
 
 		Grant = new wp.api.collections.Grant();
@@ -185,6 +214,12 @@
 		} );
 	}
 
+	/**
+	 * Trigger the search.
+	 *
+	 * @param {Event} e Event object.
+	 * @returns {void}
+	 */
 	function search( e )  {
 		var term = $( this ).val().trim();
 
@@ -197,6 +232,9 @@
 		applyFilters();
 	}
 
+	/**
+	 * Initialize the data.
+	 */
 	function init() {
 		fetchGrants();
 	}
@@ -294,6 +332,7 @@
 			);
 		} );
 
+		// Handle show more button.
 		$( '#grant-list-show-more' ).on( 'click', function() {
 			if ( ! Grant || ! Grant.hasMore() ) {
 				return;
@@ -308,9 +347,10 @@
 
 		} );
 
-
+		// Handle search input.
 		$( '#grant_search' ).on( 'keyup', _.debounce( search , 500 ) );
 
+		// Handle custom date range.
 		$( '#from, #to' ).on( 'change', function() {
 			var from = $( '#from' ).val();
 			var to = $( '#to' ).val();
