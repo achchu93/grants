@@ -372,6 +372,19 @@
 			applyFilters();
 		} );
 
+		// Handle close dropdown on outside click.
+		$( 'body' ).on( 'click', function( e ) {
+			var openDropdown = $( '.grant-custom-dropdown.is-open' );
+			if ( ! openDropdown.length ) {
+				return;
+			}
+
+			var self = $( e.target );
+			if ( ! self.closest( '.grant-custom-dropdown' ).length && ! self.is( '.grant-custom-dropdown' ) ) {
+				openDropdown.removeClass( 'is-open' );
+			}
+		} )
+
 
 	} );
 
