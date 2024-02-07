@@ -6,11 +6,10 @@
  * Version:           0.1.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
- * Author:            Ahamed Arshad
- * Author URI:        https://upwork.com/fl/achchu93
+ * Author:            Ukriate
+ * Author URI:        https://ukriate.com/
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Update URI:        https://example.com/my-plugin/
  * Text Domain:       grants
  * Domain Path:       /languages
  */
