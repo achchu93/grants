@@ -5,6 +5,7 @@
 	var oldFilters = {};
 	var Grant = null;
 	var currentRequest = null;
+	var searchText = '';
 
 	/**
 	 * Add filter element as a chip.
@@ -248,10 +249,11 @@
 	function search( e )  {
 		var term = $( this ).val().trim();
 
-		if ( ! term.length ) {
+		if ( term === searchText ) {
 			return;
 		}
 
+		searchText = term;
 		Grant = null;
 
 		applyFilters();
