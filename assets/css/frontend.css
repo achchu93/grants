@@ -218,6 +218,7 @@ body {
     display: flex;
     border-top: 1px solid var(--grant-primary-color);
     margin-top: 24px;
+	margin-bottom: 96px;
     padding-top: 24px;
 	align-items: flex-start;
 }
