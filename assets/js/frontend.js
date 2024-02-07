@@ -42,6 +42,33 @@
 		$( '.grant-filter-list--item' ).remove();
 		$( '.grant-custom-dropdown--list-item.is-active' ).removeClass( 'is-active' );
 		$( '#grant_search' ).val( '' );
+		setupFiterLabels();
+	}
+
+	/**
+	 * Setup filter labels based on the device.
+	 */
+	function setupFiterLabels() {
+		var windowWidth = window.innerWidth;
+		$( '.grant-custom-dropdown--trigger' ).each( function() {
+			var label = $( this ).text();
+			var isActive = $( this ).next().find( '.is-active' );
+			var orginalLabel = $( this ).data( 'label' );
+
+			if ( windowWidth <= 560 ) {
+				if ( ! orginalLabel ) {
+					orginalLabel = label;
+					$( this ).data( 'label', orginalLabel );
+				}
+				var activeLabel = $( this ).data( 'filter' ) === 'sortby' ? isActive.text() : $( '.grant-filter-list--item[data-key="'+ $( this ).data( 'filter' )+ '"]' ).text();
+				$( this ).text( isActive.length ?  activeLabel : orginalLabel );
+			} else {
+				if ( orginalLabel ) {
+					$( this ).text( orginalLabel );
+					$( this ).removeAttr( 'data-label' );
+				}
+			}
+		} );
 	}
 
 
@@ -237,6 +264,7 @@
 	 */
 	function init() {
 		fetchGrants();
+		setupFiterLabels();
 	}
 
 	/**
@@ -263,32 +291,35 @@
 			var value = $( this ).data( 'value' );
 			var label = $( this ).text();
 
-			if ( filter && value ) {
-
-				$( this ).addClass( 'is-active' ).siblings().removeClass( 'is-active' );
-
-				if ( filter === 'sortby' ) {
-					$container.html( '' );
-					loadList(
-						10,
-						undefined,
-						Grant.state.currentPage
-					);
-					return;
-				}
-
-				if ( filter === 'date' && value === 'custom' ) {
-					$( '#from' ).trigger( 'change' );
-					return;
-				}
-
-				filters[filter] = value;
-
-				removeFilterFromList( filter );
-				addFilterToList( filter, label );
-
-				applyFilters();
+			if ( ! filter || ! value ) {
+				return;
 			}
+
+			$( this ).addClass( 'is-active' ).siblings().removeClass( 'is-active' );
+
+			if ( filter === 'sortby' ) {
+				$container.html( '' );
+				setupFiterLabels();
+				loadList(
+					10,
+					undefined,
+					Grant.state.currentPage
+				);
+				return;
+			}
+
+			if ( filter === 'date' && value === 'custom' ) {
+				$( '#from' ).trigger( 'change' );
+				return;
+			}
+
+			filters[filter] = value;
+
+			removeFilterFromList( filter );
+			addFilterToList( filter, label );
+			setupFiterLabels();
+
+			applyFilters();
 		} );
 
 		// Handle filter chip remove.
@@ -369,6 +400,7 @@
 
 			removeFilterFromList( filterLabel );
 			addFilterToList( filterLabel, filterValue );
+			setupFiterLabels();
 			applyFilters();
 		} );
 
@@ -383,8 +415,9 @@
 			if ( ! self.closest( '.grant-custom-dropdown' ).length && ! self.is( '.grant-custom-dropdown' ) ) {
 				openDropdown.removeClass( 'is-open' );
 			}
-		} )
+		} );
 
+		$( window ).on( 'resize', setupFiterLabels );
 
 	} );
 
