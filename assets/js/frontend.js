@@ -35,6 +35,10 @@
 		$( '.grant-custom-dropdown--trigger[data-filter="'+key+'"]' ).next().find( '.is-active' ).removeClass( 'is-active' );
 	}
 
+	function toggleAppliedFilters() {
+		$( '.grant-filter-list-wrapper' ).toggleClass( 'is-active', Object.keys( filters ).length > 0 );
+	}
+
 	/**
 	 * Clear all filters.
 	 */
@@ -317,6 +321,7 @@
 
 			removeFilterFromList( filter );
 			addFilterToList( filter, label );
+			toggleAppliedFilters();
 			setupFiterLabels();
 
 			applyFilters();
@@ -400,6 +405,7 @@
 
 			removeFilterFromList( filterLabel );
 			addFilterToList( filterLabel, filterValue );
+			toggleAppliedFilters();
 			setupFiterLabels();
 			applyFilters();
 		} );
