@@ -208,6 +208,7 @@
 				if ( undefined !== cb ) {
 					cb();
 				}
+				toggleAppliedFilters();
 				hideLoading();
 			} );
 	}
@@ -321,7 +322,6 @@
 
 			removeFilterFromList( filter );
 			addFilterToList( filter, label );
-			toggleAppliedFilters();
 			setupFiterLabels();
 
 			applyFilters();
@@ -405,7 +405,6 @@
 
 			removeFilterFromList( filterLabel );
 			addFilterToList( filterLabel, filterValue );
-			toggleAppliedFilters();
 			setupFiterLabels();
 			applyFilters();
 		} );
