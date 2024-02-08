@@ -107,6 +107,10 @@
 				value = value.replace( '<', '' ).trim();
 				compare = '<=';
 				type = 'NUMERIC';
+			} else if ( value.indexOf( '>' ) !== -1 ) {
+				value = value.replace( '>', '' ).trim();
+				compare = '>=';
+				type = 'NUMERIC';
 			} else if ( value.indexOf( '-' ) !== -1 ) {
 				value = value.replace( ' ', '' ).split( '-' );
 				compare = 'BETWEEN';
