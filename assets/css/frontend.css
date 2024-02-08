@@ -89,7 +89,7 @@ body {
 .grant-custom-dropdown.is-open .grant-custom-dropdown--list {
     visibility: visible;
     opacity: 1;
-	width: 250px;
+	width: 288px;
     transform: translateY(10px);
     transition: opacity 0.3s ease-out, transform 0.2s ease-out;
 	z-index: 10;
