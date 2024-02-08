@@ -55,7 +55,13 @@ use Grants\Utils\Price;
 				<div class="grant-custom-dropdown--list">
 					<?php
 					$prices = Store::get_amounts();
-					$list   = Price::ranges( min( $prices ), max( $prices ) );
+					$list   = [
+						'<2000'      => '&#60; ' . Price::price( 2000 ),
+						'2000-7500'  => sprintf( '%s - %s', Price::price( 2000 ), Price::price( 7500 ) ),
+						'7500-20000' => sprintf( '%s - %s', Price::price( 7500 ), Price::price( 20000 ) ),
+						'7500-20000' => sprintf( '%s - %s', Price::price( 7500 ), Price::price( 20000 ) ),
+						'20000>'     => '&#62; ' . Price::price( 20000 ),
+					];
 					include GRANTS_PLUGIN_DIR . '/views/frontend/grant/dropdown-list.php';
 					?>
 				</div>
