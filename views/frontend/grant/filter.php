@@ -77,6 +77,9 @@ use Grants\Utils\Price;
 			</div>
 		</div>
 	</div>
+	<div class="grant-filter-mobile-modal-trigger">
+		<button class="modal-trigger">More Filters</button>
+	</div>
 	<div class="grant-filter-list-wrapper">
 		<div class="grant-filter-list">
 

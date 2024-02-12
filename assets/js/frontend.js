@@ -428,6 +428,37 @@
 
 		$( window ).on( 'resize', setupFiterLabels );
 
+		$( '.grant-filter-mobile-modal-trigger .modal-trigger' ).on( 'click', function() {
+			$( '.grant-filter-modal-wrapper' ).toggleClass( 'is-open' );
+		} );
+
+		$( '.modal-close' ).on( 'click', function() {
+			$( '.grant-filter-modal-wrapper' ).removeClass( 'is-open' );
+		} );
+
+		$( '.grant-filter-item--list-item' ).on( 'click', function() {
+			$( this ).toggleClass( 'is-active' );
+			$( this ).siblings().removeClass( 'is-active' );
+
+			var filter = $( this ).data( 'filter' );
+			var value = $( this ).data( 'value' );
+
+			if ( $( this ).hasClass( 'is-active' ) ) {
+				console.log( 'remove', filter, value );
+				var trigger = $( '.grant-custom-dropdown--trigger[data-filter="'+filter+'"]' );
+
+				if ( trigger.length ) {
+					trigger.next().find( '.grant-custom-dropdown--list-item[data-value="'+value+'"]' ).trigger( 'click' );
+				}
+			} else {
+				var chip = $( '.grant-filter-list--item[data-key="'+filter+'"]' );
+
+				if ( chip.length ) {
+					chip.find( 'button' ).trigger( 'click' );
+				}
+			}
+		} );
+
 	} );
 
 } )( window.jQuery );
