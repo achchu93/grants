@@ -5,6 +5,12 @@ use Grants\Utils\Price;
 <div class="grant-filter-modal-wrapper">
     <div class="grant-filter-modal">
         <div class="grant-filter-item">
+            <ul class="grant-filter-item--list">
+                <li class="grant-filter-item--list-item" data-filter="sortby" data-value="newest">Newest to Oldest</li>
+                <li class="grant-filter-item--list-item" data-filter="sortby" data-value="title">A-Z</li>
+            </ul>
+        </div>
+        <div class="grant-filter-item">
             <h5 class="grant-filter-item--title">Year</h5>
             <ul class="grant-filter-item--list">
                 <?php foreach ( Store::get_years() as $year ) : ?>

@@ -288,6 +288,12 @@
 		$( '.grant-custom-dropdown' ).on( 'click', '.grant-custom-dropdown--trigger', function( e ) {
 			e.preventDefault();
 
+			if ( window.innerWidth <= 560 ) {
+				var filter = $( this ).data( 'filter' );
+				$( '.grant-filter-modal-wrapper' ).addClass( 'is-open is-filter-' + filter );
+				return;
+			}
+
 			var dropdown = $( this ).closest( '.grant-custom-dropdown' );
 			$( '.grant-custom-dropdown' ).not( dropdown ).removeClass( 'is-open' );
 			dropdown.toggleClass( 'is-open' );
@@ -433,7 +439,9 @@
 		} );
 
 		$( '.modal-close' ).on( 'click', function() {
-			$( '.grant-filter-modal-wrapper' ).removeClass( 'is-open' );
+			$( '.grant-filter-modal-wrapper' ).removeClass( 'is-open' ).removeClass( function( index, className ) {
+				return ( className.match ( /(^|\s)is-filter-\S+/g ) || [] ).join( ' ' );
+			});
 		} );
 
 		$( '.grant-filter-item--list-item' ).on( 'click', function() {
@@ -444,7 +452,6 @@
 			var value = $( this ).data( 'value' );
 
 			if ( $( this ).hasClass( 'is-active' ) ) {
-				console.log( 'remove', filter, value );
 				var trigger = $( '.grant-custom-dropdown--trigger[data-filter="'+filter+'"]' );
 
 				if ( trigger.length ) {

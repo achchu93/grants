@@ -338,6 +338,23 @@ body {
     border-bottom: 1px solid var(--grant-primary-color);
 }
 
+.grant-filter-item:has( [data-filter="sortby"] ) {
+    display: none;
+}
+
+.is-filter-sortby .grant-filter-item {
+    display: none;
+}
+
+.is-filter-sortby .grant-filter-item:has( [data-filter="sortby"] ) {
+    display: block;
+}
+
+.is-filter-sortby .grant-filter-item:first-child {
+    margin-bottom: 0;
+    border: none;
+}
+
 .grant-filter-item:last-of-type {
     border-bottom: none;
     margin-bottom: 0;
