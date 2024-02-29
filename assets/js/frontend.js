@@ -169,9 +169,10 @@
 				model = new wp.api.models.PastGrants( model );
 			}
 			return template({
-				title: model.get('title').rendered,
+				title: model.getMeta('project-title'),
 				location: model.getMeta('location'),
 				recipient: model.getMeta('recipient'),
+				program: model.getMeta('grant-program'),
 				url: model.get('link')
 			});
 		} );
@@ -281,8 +282,8 @@
 	 */
 	$( function() {
 
-		// Initialize the data.
-		init();
+		// Wait for the api to be ready.
+		wp.api.loadPromise.done( init );
 
 		// Filter dropdown interaction.
 		$( '.grant-custom-dropdown' ).on( 'click', '.grant-custom-dropdown--trigger', function( e ) {
