@@ -109,6 +109,44 @@ class Grant {
 			}
 		}
 
+		if ( ! empty( $args['s'] ) ) {
+			$args = $this->get_search_args( $args );
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Get search query setup.
+	 * 
+	 * @param array $args Query arguments.
+	 * @return array
+	 */
+	private function get_search_args( $args ) {
+
+		$searchable_fields = [ 'recipient', 'project-title', 'grant-program', 'location' ];
+		$meta_keys         = ! empty( $args['meta_query'] ) ? wp_list_pluck( $args['meta_query'], 'key' ) : [];
+		$fields_to_search  = array_diff( $searchable_fields, $meta_keys );
+		$search_meta_query = [];
+
+		foreach ( $fields_to_search as $field ) {
+			$search_meta_query[] = [
+				'key'     => $field,
+				'value'   => $args['s'],
+				'compare' => 'LIKE'
+			];
+		}
+
+		if ( count( $search_meta_query ) ) {
+			$search_meta_query['relation']  = 'OR';
+			$args['meta_query']['relation'] = 'OR';
+
+			array_unshift( $args['meta_query'], $search_meta_query );
+
+			// unset search term to prevent default search by post table columns
+			$args['s'] = '';
+		}
+
 		return $args;
 	}
 }
